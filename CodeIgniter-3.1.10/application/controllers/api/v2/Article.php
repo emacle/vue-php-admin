@@ -27,6 +27,12 @@ use PandoraUna\Paillier\Paillier;
 use PandoraUna\Paillier\PrivateKey;
 use PandoraUna\Paillier\PublicKey;
 
+use PragmaRX\Google2FA\Google2FA;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+
 class Article extends RestController
 {
     private $Medoodb;
@@ -941,4 +947,49 @@ class Article extends RestController
     // </body>
     // </html>
 
+   // composer require pragmarx/google2fa Google Authenticator测试
+   // Bacon/QRCode 生成二维码，需要配置安装imagegick程序及dll, https://www.cnblogs.com/5aiQ/p/12373424.html
+   // It's really important that you keep your server time in sync with some NTP server
+   public function authenticator_get()
+   {
+       $google2fa = new Google2FA();
+
+       $secretKey = $google2fa->generateSecretKey();
+       echo 'The secretKey is: ' . $secretKey . '<br>';
+       echo '每个用户首次登录或绑定时生成唯一 secretKey，存入用户表字段<br>';
+
+       $user_name='emacle';
+       $user_mail='qkbeyond@gmail.com';
+       $qrCodeUrl = $google2fa->getQRCodeUrl(
+            $user_name,
+            $user_mail,
+            $secretKey
+        );
+      echo 'The  QR code url is: ' . $qrCodeUrl . '<br>';
+      // otpauth://totp/emacle:qkbeyond%40gmail.com?secret=UR235PL7YPKB4G2K&issuer=emacle&algorithm=SHA1&digits=6&period=30
+
+       $writer = new Writer(
+            new ImageRenderer(
+                new RendererStyle(200), // 大小 400
+                new ImagickImageBackEnd()
+            )
+        );
+   
+      $qrcode_image = base64_encode($writer->writeString($qrCodeUrl));
+      echo 'The  QR code png:<br>';
+      echo '<img src="data:image/png;base64,' . $qrcode_image . '"  alt="bar Identicon" />';
+      echo '<br>用户从手机Google Authenticator 扫码后将 secretKey 保存至手机端:<br>';
+      echo '每隔30s，客户端会根据在客户端的secretkey生成一个新的验证码，传至服务器后，服务器同样根据在服务端的secretkey生成验证码，比较后得出';
+
+      // 模拟服务端校验验证码。客户端已扫码保存密钥 'IQPVOKABSMCD6PPD'
+      $server_secretKey = 'IQPVOKABSMCD6PPD';
+      $secret = '671563'; // 获得手机端显示的验证码 $request->input('secret')
+
+      $valid = $google2fa->verifyKey($server_secretKey, $secret); // 一致则为true,否则为false
+      if($valid) {
+          echo '<br><br>验证码 (' . $secret . ')校验正确，通过！';
+      } else {
+        echo '<br><br>验证码 (' . $secret . ')校验失败！';
+      }
+    }
 } // class Article end

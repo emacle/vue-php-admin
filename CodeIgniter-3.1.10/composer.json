@@ -27,7 +27,9 @@
 		"nesbot/carbon": "^2.33",
 		"yzalis/identicon": "^2.0",
 		"pandora-una/paillier": "^1.0",
-		"flowjs/flow-php-server": "^1.0"
+		"flowjs/flow-php-server": "^1.0",
+		"bacon/bacon-qr-code": "^2.0",
+		"pragmarx/google2fa": "^8.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
