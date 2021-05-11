@@ -367,6 +367,30 @@ export default {
         view: this.$route,
         $router: this.$router
       })
+      // delCurrentView 关闭当前页面路由 并返回最后一个路由页面如果没有则返回根路由
+
+      // 关闭当前路由 view
+      // 在框架中的tagsView.js中其实有写好的方法的 delView, 这里的重点是view这个参数，
+      // 这个参数是一个对象，必须有name 和path这两个必要的值 才可以实现关闭tagView的功能
+
+      // this.$store.dispatch("tagsView/delView", this.$route);
+
+      // /* 要关闭的view */
+      // var view = {
+      //   name:"Qicaohetong",
+      //   path:"/contract/qicaohetong"
+      // };
+      // this.$store.dispatch('tagsView/delView', view).then(({ visitedViews }) => {
+      // visitedViews 为删除路由后形成的新的路由标签页数组
+      //   /*当前的界面关闭后，要跳转到的位置，或者去存数据都可以*/
+      //   var latestView = visitedViews.slice(-1)[0] // 取出最后加入的路由标签可以push 跳转该标签路由
+      //   slice(-1) 表示 visitedViews 数组取出最后一个元素并形成新的数组，该数组只包含一个元素即[0]
+      //   是一个对象包含有name 和path, this.$router.push(latestView)
+
+      //   也可以直接跳转到其他路由
+      //   this.$router.push({ name: 'Qicaohetong', params: {formData: this.formDataEdit} });
+      //   /*todo:可以继续写其他的业务*/
+      // })
     },
 
     initWebSocket() {
