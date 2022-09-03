@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ /index.php?/$1 [QSA,PT,L]
+    # sovled php apache missing Authorization header http://httpd.apache.org/docs/current/howto/cgi.html
+    # If your CGI program depends on non-standard environment variables, you will need to assure that those variables are passed by Apache.
+    SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
+</IfModule>
