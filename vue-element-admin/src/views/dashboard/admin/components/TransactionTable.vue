@@ -22,6 +22,7 @@
 
 <script>
 import { fetchList } from '@/api/transaction'
+import { fetchListx } from '@/api/transaction'
 
 export default {
   filters: {
@@ -38,7 +39,8 @@ export default {
   },
   data() {
     return {
-      list: null
+      list: null,
+      listx: null
     }
   },
   created() {
@@ -48,6 +50,9 @@ export default {
     fetchData() {
       fetchList().then(response => {
         this.list = response.data.items.slice(0, 8)
+      })
+      fetchListx().then(response => {
+        this.listx = response.data
       })
     }
   }

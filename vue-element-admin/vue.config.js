@@ -14,7 +14,7 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 // You can change the port by the following method:
 // port = 9527 npm run dev OR npm run dev --port = 9527
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
-
+// console.log(process.env)
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -36,8 +36,25 @@ module.exports = {
       warnings: false,
       errors: true
     },
+    proxy: {
+      [process.env.VUE_APP_BASE_API]: {
+        target: process.env.VUE_APP_BASE_URL,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      [process.env.VUE_APP_ANOTHER_BASE_API]: {
+        target: process.env.VUE_APP_ANOTHER_BASE_URL,
+        changeOrigin: true,
+        pathRewrite: {
+          ['^' + process.env.VUE_APP_ANOTHER_BASE_API]: ''
+        }
+      },
+    },
     before: require('./mock/mock-server.js')
   },
+
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
@@ -95,7 +112,7 @@ module.exports = {
             .plugin('ScriptExtHtmlWebpackPlugin')
             .after('html')
             .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
+              // `runtime` must same as runtimeChunk name. default is `runtime`
               inline: /runtime\..*\.js$/
             }])
             .end()
