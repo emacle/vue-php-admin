@@ -1,4 +1,4 @@
-# [VUE-PHP-ADMIN-DEMO](http://www.emacle.cf:10000)
+# [VUE-PHP-ADMIN-DEMO](http://emacle.rr.nu:10000)
 
 # vue-php-admin 项目说明
 
